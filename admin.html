@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles/admin.css" />
+  </head>
+  <body>
+    <header class="uporer-bar">
+      <div class="admin-porichoy">
+        <div class="profile-icon">👤</div>
+        <h2>Admin</h2>
+      </div>
+
+      <button id="logout-button" onclick="logoutFunction()">Logout</button>
+    </header>
+
+    <div class="dashboard-body">
+      <nav class="bam-navigation">
+        <button id="dashboard-nav" onclick="dashboardFunction()">
+          Dashboard
+        </button>
+        <button id="user-nav" onclick="manageUserFunction()">
+          Manage User
+        </button>
+        <button id="role-nav" onclick="assignRoleFunction()">
+          Assign Role
+        </button>
+        <button id="data-nav" onclick="viewDataFunction()">
+          View System Data
+        </button>
+        <button id="activity-nav" onclick="monitorActivityFunction()">
+          Monitor Activity
+        </button>
+      </nav>
+
+      <main class="dan-content" id="content-area">
+        <section id="dashboard-content">
+          <h1 class="dashboard-title">Admin Dashboard</h1>
+          <div class="summary-box box-one"><h3>Total Users</h3><p>120</p></div>
+          <div class="summary-box box-two"><h3>Total Doctors</h3><p>25</p></div>
+          <div class="summary-box box-three"><h3>Total Patients</h3><p>90</p></div>
+          <div class="summary-box box-four"><h3>Appointments</h3><p>18</p></div>
+        </section>
+
+        <section id="manage-user-content" class="lukano-content">
+          <h1>Manage User</h1>
+          <table>
+            <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Action</th></tr>
+            <tr><td>1</td><td>Rahim Ahmed</td><td>rahim@email.com</td><td>Doctor</td><td><button onclick="deleteUserFunction()">Delete</button></td></tr>
+            <tr><td>2</td><td>Karim Hasan</td><td>karim@email.com</td><td>Patient</td><td><button onclick="deleteUserFunction()">Delete</button></td></tr>
+            <tr><td>3</td><td>Nadia Islam</td><td>nadia@email.com</td><td>Patient</td><td><button onclick="deleteUserFunction()">Delete</button></td></tr>
+          </table>
+
+          <h2>Add User</h2>
+          <form onsubmit="return addUserFunction()">
+            <label for="new-user-name">Name</label>
+            <input type="text" id="new-user-name" required>
+            <label for="new-user-email">Email</label>
+            <input type="email" id="new-user-email" required>
+            <button type="submit">Add User</button>
+          </form>
+        </section>
+
+        <section id="assign-role-content" class="lukano-content">
+          <h1>Assign Role</h1>
+          <form onsubmit="return saveRoleFunction()">
+            <label for="role-user">Select User</label>
+            <select id="role-user" required>
+              <option value="">Select a user</option>
+              <option value="1">Rahim Ahmed</option>
+              <option value="2">Karim Hasan</option>
+              <option value="3">Nadia Islam</option>
+            </select>
+            <label for="new-role">Select Role</label>
+            <select id="new-role" required>
+              <option value="">Select a role</option>
+              <option value="admin">Admin</option>
+              <option value="doctor">Doctor</option>
+              <option value="patient">Patient</option>
+            </select>
+            <button type="submit">Assign Role</button>
+          </form>
+        </section>
+
+        <section id="system-data-content" class="lukano-content">
+          <h1>View System Data</h1>
+          <table>
+            <tr><th>Data</th><th>Total</th><th>Last Updated</th></tr>
+            <tr><td>Users</td><td>120</td><td>25 August 2026</td></tr>
+            <tr><td>Appointments</td><td>340</td><td>25 August 2026</td></tr>
+            <tr><td>Leave Applications</td><td>12</td><td>24 August 2026</td></tr>
+            <tr><td>Active Doctors</td><td>22</td><td>25 August 2026</td></tr>
+          </table>
+        </section>
+
+        <section id="activity-content" class="lukano-content">
+          <h1>Monitor Activity</h1>
+          <table>
+            <tr><th>User</th><th>Activity</th><th>Time</th></tr>
+            <tr><td>Rahim Ahmed</td><td>Logged in</td><td>10:30 AM</td></tr>
+            <tr><td>Karim Hasan</td><td>Booked an appointment</td><td>10:45 AM</td></tr>
+            <tr><td>Nadia Islam</td><td>Updated profile</td><td>11:05 AM</td></tr>
+            <tr><td>Admin</td><td>Assigned a role</td><td>11:20 AM</td></tr>
+          </table>
+        </section>
+      </main>
+    </div>
+
+    <script src="scripts/admin.js"></script>
+  </body>
+</html>
