@@ -1,0 +1,180 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f1f5f8;
+}
+
+.uporer-bar {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  color: white;
+  background-color: #176b87;
+}
+
+.admin-porichoy {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 50%;
+  font-size: 24px;
+}
+
+#logout-button {
+  width: auto;
+  padding: 10px 20px;
+  color: #176b87;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.dashboard-body {
+  display: flex;
+  min-height: calc(100vh - 70px);
+}
+
+.bam-navigation {
+  width: 230px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-right: 1px solid #dddddd;
+}
+
+.bam-navigation button {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 10px;
+  text-align: left;
+  color: #333333;
+  background-color: #eeeeee;
+  border: none;
+  cursor: pointer;
+}
+
+.bam-navigation button:hover {
+  color: white;
+  background-color: #176b87;
+}
+
+.dan-content {
+  flex: 1;
+  padding: 30px;
+  background-color: #fafafa;
+  margin: 20px;
+  border: 1px solid #dddddd;
+  border-radius: 6px;
+}
+
+.dan-content h1 {
+  color: #176b87;
+  margin-bottom: 25px;
+}
+
+.dan-content h2 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.summary-box {
+  min-height: 130px;
+  width: 220px;
+  padding: 20px;
+  color: white;
+  background-color: #2e8b57;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px #cccccc;
+}
+
+.summary-box p {
+  margin-top: 18px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.box-two {
+  background-color: #2878b5;
+}
+
+.box-three {
+  background-color: #d9822b;
+}
+
+.box-four {
+  background-color: #b94a48;
+}
+
+#dashboard-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.dashboard-title {
+  width: 100%;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.lukano-content {
+  display: none;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #cccccc;
+}
+
+th {
+  color: white;
+  background-color: #176b87;
+}
+
+td button,
+form button {
+  padding: 8px 15px;
+  color: white;
+  background-color: #176b87;
+  border: none;
+  cursor: pointer;
+}
+
+form {
+  width: 400px;
+}
+
+label {
+  display: block;
+  margin-bottom: 7px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #bbbbbb;
+}
