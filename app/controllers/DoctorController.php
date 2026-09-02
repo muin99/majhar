@@ -46,3 +46,20 @@ class DoctorController extends Controller
         echo json_encode(array("success" => true, "message" => "Leave application deleted."));
     }
 }
+
+if (isset($_GET["action"])) {
+    if (session_status() == PHP_SESSION_NONE) { session_start(); }
+    header("Content-Type: application/json");
+    if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] != "doctor") {
+        echo json_encode(array("success" => false, "message" => "You are not allowed to do this."));
+    } else {
+        $action = $_GET["action"];
+        $controller = new DoctorController();
+        if ($action == "doctor_data") { $controller->getData(); }
+        elseif ($action == "update_appointment") { $controller->updateAppointment(); }
+        elseif ($action == "apply_leave") { $controller->applyLeave(); }
+        elseif ($action == "update_leave") { $controller->updateLeave(); }
+        elseif ($action == "delete_leave") { $controller->deleteLeave(); }
+        else { echo json_encode(array("success" => false, "message" => "Invalid action.")); }
+    }
+}

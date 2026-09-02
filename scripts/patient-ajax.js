@@ -1,3 +1,5 @@
+var ENDPOINT = "app/controllers/PatientController.php";
+
 function request(url, data, callback) {
   var xhr = new XMLHttpRequest();
   xhr.open(data ? "POST" : "GET", url, true);
@@ -12,7 +14,7 @@ function statusBadge(status) {
 var patientAppointments = [];
 
 function loadPatientData() {
-  request("api/index.php?action=patient_data", null, function (result) {
+  request(ENDPOINT + "?action=patient_data", null, function (result) {
     var doctors = document.getElementById("doctor-id");
     doctors.innerHTML = '<option value="">Choose doctor</option>';
     for (var i = 0; i < result.doctors.length; i++) {
@@ -74,7 +76,7 @@ function deleteAppointment(id) {
   if (!confirm("Cancel this appointment?")) return;
   var data = new FormData();
   data.append("appointment_id", id);
-  request("api/index.php?action=delete_appointment", data, function (result) {
+  request(ENDPOINT + "?action=delete_appointment", data, function (result) {
     document.getElementById("message").innerHTML = result.message;
     loadPatientData();
   });
@@ -92,14 +94,14 @@ document.getElementById("appointment-form").onsubmit = function (event) {
   data.append("notes", document.getElementById("appointment-notes").value);
 
   if (appointmentId == "") {
-    request("api/index.php?action=book_appointment", data, function (result) {
+    request(ENDPOINT + "?action=book_appointment", data, function (result) {
       document.getElementById("message").innerHTML = result.message;
       if (result.success) resetAppointmentForm();
       loadPatientData();
     });
   } else {
     data.append("appointment_id", appointmentId);
-    request("api/index.php?action=update_appointment_patient", data, function (result) {
+    request(ENDPOINT + "?action=update_appointment_patient", data, function (result) {
       document.getElementById("message").innerHTML = result.message;
       if (result.success) resetAppointmentForm();
       loadPatientData();

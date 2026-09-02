@@ -59,3 +59,20 @@ class AdminController extends Controller
         }
     }
 }
+
+if (isset($_GET["action"])) {
+    if (session_status() == PHP_SESSION_NONE) { session_start(); }
+    header("Content-Type: application/json");
+    if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] != "admin") {
+        echo json_encode(array("success" => false, "message" => "You are not allowed to do this."));
+    } else {
+        $action = $_GET["action"];
+        $controller = new AdminController();
+        if ($action == "admin_data") { $controller->getData(); }
+        elseif ($action == "review_leave") { $controller->reviewLeave(); }
+        elseif ($action == "create_user") { $controller->createUser(); }
+        elseif ($action == "update_user") { $controller->updateUser(); }
+        elseif ($action == "delete_user") { $controller->deleteUser(); }
+        else { echo json_encode(array("success" => false, "message" => "Invalid action.")); }
+    }
+}

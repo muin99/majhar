@@ -40,3 +40,19 @@ class PatientController extends Controller
         echo json_encode(array("success" => true, "message" => "Appointment cancelled."));
     }
 }
+
+if (isset($_GET["action"])) {
+    if (session_status() == PHP_SESSION_NONE) { session_start(); }
+    header("Content-Type: application/json");
+    if (!isset($_SESSION["user_role"]) || $_SESSION["user_role"] != "patient") {
+        echo json_encode(array("success" => false, "message" => "You are not allowed to do this."));
+    } else {
+        $action = $_GET["action"];
+        $controller = new PatientController();
+        if ($action == "patient_data") { $controller->getData(); }
+        elseif ($action == "book_appointment") { $controller->book(); }
+        elseif ($action == "update_appointment_patient") { $controller->update(); }
+        elseif ($action == "delete_appointment") { $controller->delete(); }
+        else { echo json_encode(array("success" => false, "message" => "Invalid action.")); }
+    }
+}

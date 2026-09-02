@@ -1,3 +1,5 @@
+var ENDPOINT = "app/controllers/AuthController.php";
+
 var loginForm = document.getElementById("login-form");
 var registerForm = document.getElementById("register-form");
 
@@ -27,7 +29,7 @@ loginForm.onsubmit = function (event) {
   var data = new FormData();
   data.append("email", document.getElementById("login-email").value);
   data.append("password", document.getElementById("login-password").value);
-  sendRequest("api/index.php?action=login", data, function (result) {
+  sendRequest(ENDPOINT + "?action=login", data, function (result) {
     document.getElementById("login-message").innerHTML = result.message;
     if (result.success) window.location.href = "index.php?page=" + result.role;
   });
@@ -44,7 +46,7 @@ registerForm.onsubmit = function (event) {
     "confirm_password",
     document.getElementById("confirm-password").value,
   );
-  sendRequest("api/index.php?action=register", data, function (result) {
+  sendRequest(ENDPOINT + "?action=register", data, function (result) {
     document.getElementById("register-message").innerHTML = result.message;
     if (result.success) {
       registerForm.reset();

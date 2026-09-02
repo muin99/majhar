@@ -77,3 +77,14 @@ class AuthController extends Controller
         echo json_encode(array("success" => true));
     }
 }
+
+if (isset($_GET["action"])) {
+    if (session_status() == PHP_SESSION_NONE) { session_start(); }
+    header("Content-Type: application/json");
+    $action = $_GET["action"];
+    $controller = new AuthController();
+    if ($action == "login") { $controller->login(); }
+    elseif ($action == "register") { $controller->register(); }
+    elseif ($action == "logout") { $controller->logout(); }
+    else { echo json_encode(array("success" => false, "message" => "Invalid action.")); }
+}
