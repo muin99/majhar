@@ -1,9 +1,7 @@
 function request(url, data, callback) {
   var xhr = new XMLHttpRequest();
   xhr.open(data ? "POST" : "GET", url, true);
-  xhr.onload = function () {
-    callback(JSON.parse(xhr.responseText));
-  };
+  xhr.onload = function () { callback(JSON.parse(xhr.responseText)); };
   xhr.send(data);
 }
 
@@ -14,8 +12,7 @@ function statusBadge(status) {
 function loadAdminData() {
   request("api/index.php?action=admin_data", null, function (result) {
     document.getElementById("user-count").innerHTML = result.users.length;
-    document.getElementById("appointment-count").innerHTML =
-      result.appointments;
+    document.getElementById("appointment-count").innerHTML = result.appointments;
     document.getElementById("leave-count").innerHTML = result.pending_leaves;
 
     var leaveList = document.getElementById("leave-list");
@@ -24,80 +21,82 @@ function loadAdminData() {
       var leave = result.leaves[i];
       var action = "-";
       if (leave.status == "pending") {
-        action =
-          '<div class="inline">' +
-          '<button onclick="reviewLeave(' +
-          leave.id +
-          ", 'approved')\">Approve</button>" +
-          '<button class="danger" onclick="reviewLeave(' +
-          leave.id +
-          ", 'rejected')\">Reject</button>" +
+        action = '<div class="inline">' +
+          '<button onclick="reviewLeave(' + leave.id + ', \'approved\')">Approve</button>' +
+          '<button class="danger" onclick="reviewLeave(' + leave.id + ', \'rejected\')">Reject</button>' +
           "</div>";
       }
-      leaveList.innerHTML +=
-        "<tr><td>" +
-        leave.doctor_name +
-        "</td><td>" +
-        leave.start_date +
-        " to " +
-        leave.end_date +
-        "</td><td>" +
-        leave.reason +
-        "</td><td>" +
-        statusBadge(leave.status) +
-        "</td><td>" +
-        action +
-        "</td></tr>";
+      leaveList.innerHTML += "<tr><td>" + leave.doctor_name + "</td><td>" + leave.start_date + " to " + leave.end_date + "</td><td>" + leave.reason + "</td><td>" + statusBadge(leave.status) + "</td><td>" + action + "</td></tr>";
     }
-    if (result.leaves.length == 0)
-      leaveList.innerHTML =
-        '<tr><td colspan="5">No leave applications yet.</td></tr>';
+    if (result.leaves.length == 0) leaveList.innerHTML = '<tr><td colspan="5">No leave applications yet.</td></tr>';
 
     var userList = document.getElementById("user-list");
     userList.innerHTML = "";
     for (var j = 0; j < result.users.length; j++) {
       var user = result.users[j];
-      var roleControl = "-";
-      if (user.role == "doctor") {
-        roleControl =
-          '<button onclick="changeRole(' +
-          user.id +
-          ", 'patient')\">Make patient</button>";
-      } else if (user.role == "patient") {
-        roleControl =
-          '<button onclick="changeRole(' +
-          user.id +
-          ", 'doctor')\">Make doctor</button>";
-      }
-      userList.innerHTML +=
-        "<tr><td>" +
-        user.name +
-        "</td><td>" +
-        user.email +
-        "</td><td>" +
-        user.role +
-        "</td><td>" +
-        roleControl +
+      userList.innerHTML += "<tr>" +
+        '<td><input type="text" id="name-' + user.id + '" value="' + user.name + '"></td>' +
+        '<td><input type="email" id="email-' + user.id + '" value="' + user.email + '"></td>' +
+        '<td><select id="role-' + user.id + '">' +
+        '<option value="patient"' + (user.role == "patient" ? " selected" : "") + ">Patient</option>" +
+        '<option value="doctor"' + (user.role == "doctor" ? " selected" : "") + ">Doctor</option>" +
+        '<option value="admin"' + (user.role == "admin" ? " selected" : "") + ">Admin</option>" +
+        "</select></td>" +
+        '<td class="inline">' +
+        '<button onclick="updateUser(' + user.id + ')">Save</button>' +
+        '<button class="danger" onclick="deleteUser(' + user.id + ')">Delete</button>' +
         "</td></tr>";
     }
   });
 }
 
-function reviewLeave(leaveId, status) {
+document.getElementById("user-form").onsubmit = function (event) {
+  event.preventDefault();
+  if (!confirm("Add this new user?")) return;
   var data = new FormData();
-  data.append("leave_id", leaveId);
-  data.append("status", status);
-  request("api/index.php?action=review_leave", data, function (result) {
+  data.append("name", document.getElementById("new-user-name").value);
+  data.append("email", document.getElementById("new-user-email").value);
+  data.append("password", document.getElementById("new-user-password").value);
+  data.append("role", document.getElementById("new-user-role").value);
+  request("api/index.php?action=create_user", data, function (result) {
+    document.getElementById("message").innerHTML = result.message;
+    if (result.success) {
+      document.getElementById("user-form").reset();
+      loadAdminData();
+    }
+  });
+};
+
+function updateUser(userId) {
+  if (!confirm("Save changes to this user?")) return;
+  var data = new FormData();
+  data.append("user_id", userId);
+  data.append("name", document.getElementById("name-" + userId).value);
+  data.append("email", document.getElementById("email-" + userId).value);
+  data.append("role", document.getElementById("role-" + userId).value);
+  request("api/index.php?action=update_user", data, function (result) {
     document.getElementById("message").innerHTML = result.message;
     loadAdminData();
   });
 }
 
-function changeRole(userId, role) {
+function deleteUser(userId) {
+  if (!confirm("Delete this user?")) return;
   var data = new FormData();
   data.append("user_id", userId);
-  data.append("role", role);
-  request("api/index.php?action=change_role", data, function (result) {
+  request("api/index.php?action=delete_user", data, function (result) {
+    document.getElementById("message").innerHTML = result.message;
+    loadAdminData();
+  });
+}
+
+function reviewLeave(leaveId, status) {
+  var label = status == "approved" ? "approve" : "reject";
+  if (!confirm("Are you sure you want to " + label + " this leave request?")) return;
+  var data = new FormData();
+  data.append("leave_id", leaveId);
+  data.append("status", status);
+  request("api/index.php?action=review_leave", data, function (result) {
     document.getElementById("message").innerHTML = result.message;
     loadAdminData();
   });

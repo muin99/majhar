@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Majhar Hospital</title>
+    <title>Care Plus Hospital</title>
     <link rel="stylesheet" href="styles/index.css">
 </head>
 
@@ -13,7 +13,7 @@
         <div class="chobi-ongsho"><img src="assets/hospital.jpg" alt="Hospital"></div>
         <div class="form-ongsho">
             <form id="login-form">
-                <h1>Majhar Hospital</h1>
+                <h1>Care Plus Hospital</h1>
                 <p>Login to your account</p>
                 <label>Email</label><input type="email" id="login-email" required>
                 <label>Password</label><input type="password" id="login-password" required>

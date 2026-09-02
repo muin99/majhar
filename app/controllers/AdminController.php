@@ -27,11 +27,35 @@ class AdminController extends Controller
         echo json_encode(array("success" => true, "message" => "Leave request updated."));
     }
 
-    public function changeRole()
+    public function createUser()
     {
-        $role = $_POST["role"];
-        if ($role != "patient" && $role != "doctor") { echo json_encode(array("success" => false, "message" => "Invalid role.")); return; }
-        $userModel = new User(); $userModel->changeRole($_POST["user_id"], $role);
-        echo json_encode(array("success" => true, "message" => "User role updated."));
+        $name = trim($_POST["name"]); $email = trim($_POST["email"]); $password = $_POST["password"]; $role = $_POST["role"];
+        if ($name == "" || $email == "" || $password == "" || $role == "") { echo json_encode(array("success" => false, "message" => "Please fill in all fields.")); return; }
+        if ($role != "patient" && $role != "doctor" && $role != "admin") { echo json_encode(array("success" => false, "message" => "Invalid role.")); return; }
+        $userModel = new User();
+        if ($userModel->findByEmail($email)) { echo json_encode(array("success" => false, "message" => "Email already exists.")); return; }
+        $userModel->create($name, $email, $password, $role);
+        echo json_encode(array("success" => true, "message" => "User created."));
+    }
+
+    public function updateUser()
+    {
+        $name = trim($_POST["name"]); $email = trim($_POST["email"]); $role = $_POST["role"];
+        if ($name == "" || $email == "" || $role == "") { echo json_encode(array("success" => false, "message" => "Please fill in all fields.")); return; }
+        if ($role != "patient" && $role != "doctor" && $role != "admin") { echo json_encode(array("success" => false, "message" => "Invalid role.")); return; }
+        $userModel = new User(); $userModel->update($_POST["user_id"], $name, $email, $role);
+        echo json_encode(array("success" => true, "message" => "User updated."));
+    }
+
+    public function deleteUser()
+    {
+        if ($_POST["user_id"] == $_SESSION["user_id"]) { echo json_encode(array("success" => false, "message" => "You cannot delete your own account.")); return; }
+        $userModel = new User();
+        try {
+            $userModel->delete($_POST["user_id"]);
+            echo json_encode(array("success" => true, "message" => "User deleted."));
+        } catch (PDOException $error) {
+            echo json_encode(array("success" => false, "message" => "Cannot delete this user because they have related appointments or leaves."));
+        }
     }
 }

@@ -25,4 +25,18 @@ class PatientController extends Controller
         $appointmentModel = new Appointment(); $appointmentModel->create($_SESSION["user_id"], $doctorId, $date, $time, $notes);
         echo json_encode(array("success" => true, "message" => "Appointment request sent."));
     }
+
+    public function update()
+    {
+        $date = $_POST["date"]; $time = $_POST["time"]; $notes = trim($_POST["notes"]);
+        if ($date == "" || $time == "") { echo json_encode(array("success" => false, "message" => "Please choose date and time.")); return; }
+        $appointmentModel = new Appointment(); $appointmentModel->updateByPatient($_POST["appointment_id"], $_SESSION["user_id"], $date, $time, $notes);
+        echo json_encode(array("success" => true, "message" => "Appointment updated."));
+    }
+
+    public function delete()
+    {
+        $appointmentModel = new Appointment(); $appointmentModel->deleteByPatient($_POST["appointment_id"], $_SESSION["user_id"]);
+        echo json_encode(array("success" => true, "message" => "Appointment cancelled."));
+    }
 }

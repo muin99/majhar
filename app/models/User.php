@@ -31,9 +31,16 @@ class User extends Model
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function changeRole($id, $role)
+    public function update($id, $name, $email, $role)
     {
-        $statement = $this->db->prepare("UPDATE users SET role = ? WHERE id = ?");
-        return $statement->execute(array($role, $id));
+        $query = "UPDATE users SET name = ?, email = ?, role = ? WHERE id = ?";
+        $statement = $this->db->prepare($query);
+        return $statement->execute(array($name, $email, $role, $id));
+    }
+
+    public function delete($id)
+    {
+        $statement = $this->db->prepare("DELETE FROM users WHERE id = ?");
+        return $statement->execute(array($id));
     }
 }
