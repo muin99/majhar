@@ -38,4 +38,18 @@ class Appointment extends Model
     {
         return $this->db->query("SELECT COUNT(*) FROM appointments")->fetchColumn();
     }
+
+    public function updateByPatient($id, $patientId, $date, $time, $notes)
+    {
+        $query = "UPDATE appointments SET appointment_date = ?, appointment_time = ?, notes = ? WHERE id = ? AND patient_id = ? AND status = 'pending'";
+        $statement = $this->db->prepare($query);
+        return $statement->execute(array($date, $time, $notes, $id, $patientId));
+    }
+
+    public function deleteByPatient($id, $patientId)
+    {
+        $query = "DELETE FROM appointments WHERE id = ? AND patient_id = ? AND status = 'pending'";
+        $statement = $this->db->prepare($query);
+        return $statement->execute(array($id, $patientId));
+    }
 }

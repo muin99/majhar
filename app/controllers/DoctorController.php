@@ -32,4 +32,17 @@ class DoctorController extends Controller
         $leaveModel = new Leave(); $leaveModel->create($_SESSION["user_id"], $_POST["start_date"], $_POST["end_date"], trim($_POST["reason"]));
         echo json_encode(array("success" => true, "message" => "Leave application submitted."));
     }
+
+    public function updateLeave()
+    {
+        if ($_POST["start_date"] == "" || $_POST["end_date"] == "" || trim($_POST["reason"]) == "") { echo json_encode(array("success" => false, "message" => "Please fill in all leave fields.")); return; }
+        $leaveModel = new Leave(); $leaveModel->update($_POST["leave_id"], $_SESSION["user_id"], $_POST["start_date"], $_POST["end_date"], trim($_POST["reason"]));
+        echo json_encode(array("success" => true, "message" => "Leave application updated."));
+    }
+
+    public function deleteLeave()
+    {
+        $leaveModel = new Leave(); $leaveModel->delete($_POST["leave_id"], $_SESSION["user_id"]);
+        echo json_encode(array("success" => true, "message" => "Leave application deleted."));
+    }
 }

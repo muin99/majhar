@@ -33,4 +33,18 @@ class Leave extends Model
     {
         return $this->db->query("SELECT COUNT(*) FROM leaves WHERE status = 'pending'")->fetchColumn();
     }
+
+    public function update($id, $doctorId, $startDate, $endDate, $reason)
+    {
+        $query = "UPDATE leaves SET start_date = ?, end_date = ?, reason = ? WHERE id = ? AND doctor_id = ? AND status = 'pending'";
+        $statement = $this->db->prepare($query);
+        return $statement->execute(array($startDate, $endDate, $reason, $id, $doctorId));
+    }
+
+    public function delete($id, $doctorId)
+    {
+        $query = "DELETE FROM leaves WHERE id = ? AND doctor_id = ? AND status = 'pending'";
+        $statement = $this->db->prepare($query);
+        return $statement->execute(array($id, $doctorId));
+    }
 }
