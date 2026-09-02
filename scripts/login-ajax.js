@@ -15,24 +15,20 @@ document.getElementById("show-login").onclick = function (event) {
   loginForm.style.display = "block";
 };
 
-function sendRequest(url, data, callback) {
-  var request = new XMLHttpRequest();
-  request.open("POST", url, true);
-  request.onload = function () {
-    callback(JSON.parse(request.responseText));
-  };
-  request.send(data);
-}
-
 loginForm.onsubmit = function (event) {
   event.preventDefault();
   var data = new FormData();
   data.append("email", document.getElementById("login-email").value);
   data.append("password", document.getElementById("login-password").value);
-  sendRequest(ENDPOINT + "?action=login", data, function (result) {
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", ENDPOINT + "?action=login", true);
+  xhr.onload = function () {
+    var result = JSON.parse(xhr.responseText);
     document.getElementById("login-message").innerHTML = result.message;
     if (result.success) window.location.href = "index.php?page=" + result.role;
-  });
+  };
+  xhr.send(data);
 };
 
 registerForm.onsubmit = function (event) {
@@ -46,11 +42,16 @@ registerForm.onsubmit = function (event) {
     "confirm_password",
     document.getElementById("confirm-password").value,
   );
-  sendRequest(ENDPOINT + "?action=register", data, function (result) {
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", ENDPOINT + "?action=register", true);
+  xhr.onload = function () {
+    var result = JSON.parse(xhr.responseText);
     document.getElementById("register-message").innerHTML = result.message;
     if (result.success) {
       registerForm.reset();
       document.getElementById("show-login").click();
     }
-  });
+  };
+  xhr.send(data);
 };
