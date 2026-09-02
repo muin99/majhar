@@ -1,3 +1,5 @@
+var ENDPOINT = "app/controllers/AdminController.php";
+
 function request(url, data, callback) {
   var xhr = new XMLHttpRequest();
   xhr.open(data ? "POST" : "GET", url, true);
@@ -10,7 +12,7 @@ function statusBadge(status) {
 }
 
 function loadAdminData() {
-  request("api/index.php?action=admin_data", null, function (result) {
+  request(ENDPOINT + "?action=admin_data", null, function (result) {
     document.getElementById("user-count").innerHTML = result.users.length;
     document.getElementById("appointment-count").innerHTML = result.appointments;
     document.getElementById("leave-count").innerHTML = result.pending_leaves;
@@ -58,7 +60,7 @@ document.getElementById("user-form").onsubmit = function (event) {
   data.append("email", document.getElementById("new-user-email").value);
   data.append("password", document.getElementById("new-user-password").value);
   data.append("role", document.getElementById("new-user-role").value);
-  request("api/index.php?action=create_user", data, function (result) {
+  request(ENDPOINT + "?action=create_user", data, function (result) {
     document.getElementById("message").innerHTML = result.message;
     if (result.success) {
       document.getElementById("user-form").reset();
@@ -74,7 +76,7 @@ function updateUser(userId) {
   data.append("name", document.getElementById("name-" + userId).value);
   data.append("email", document.getElementById("email-" + userId).value);
   data.append("role", document.getElementById("role-" + userId).value);
-  request("api/index.php?action=update_user", data, function (result) {
+  request(ENDPOINT + "?action=update_user", data, function (result) {
     document.getElementById("message").innerHTML = result.message;
     loadAdminData();
   });
@@ -84,7 +86,7 @@ function deleteUser(userId) {
   if (!confirm("Delete this user?")) return;
   var data = new FormData();
   data.append("user_id", userId);
-  request("api/index.php?action=delete_user", data, function (result) {
+  request(ENDPOINT + "?action=delete_user", data, function (result) {
     document.getElementById("message").innerHTML = result.message;
     loadAdminData();
   });
@@ -96,7 +98,7 @@ function reviewLeave(leaveId, status) {
   var data = new FormData();
   data.append("leave_id", leaveId);
   data.append("status", status);
-  request("api/index.php?action=review_leave", data, function (result) {
+  request(ENDPOINT + "?action=review_leave", data, function (result) {
     document.getElementById("message").innerHTML = result.message;
     loadAdminData();
   });

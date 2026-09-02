@@ -1,3 +1,5 @@
+var ENDPOINT = "app/controllers/DoctorController.php";
+
 function request(url, data, callback) {
   var xhr = new XMLHttpRequest();
   xhr.open(data ? "POST" : "GET", url, true);
@@ -12,7 +14,7 @@ function statusBadge(status) {
 var doctorLeaves = [];
 
 function loadDoctorData() {
-  request("api/index.php?action=doctor_data", null, function (result) {
+  request(ENDPOINT + "?action=doctor_data", null, function (result) {
     var appointmentList = document.getElementById("appointment-list");
     appointmentList.innerHTML = "";
     for (var i = 0; i < result.appointments.length; i++) {
@@ -57,7 +59,7 @@ function updateAppointment(appointmentId, status) {
   var data = new FormData();
   data.append("appointment_id", appointmentId);
   data.append("status", status);
-  request("api/index.php?action=update_appointment", data, function (result) {
+  request(ENDPOINT + "?action=update_appointment", data, function (result) {
     document.getElementById("message").innerHTML = result.message;
     loadDoctorData();
   });
@@ -98,7 +100,7 @@ function deleteLeave(leaveId) {
   if (!confirm("Delete this leave application?")) return;
   var data = new FormData();
   data.append("leave_id", leaveId);
-  request("api/index.php?action=delete_leave", data, function (result) {
+  request(ENDPOINT + "?action=delete_leave", data, function (result) {
     document.getElementById("message").innerHTML = result.message;
     loadDoctorData();
   });
@@ -115,14 +117,14 @@ document.getElementById("leave-form").onsubmit = function (event) {
   data.append("reason", document.getElementById("leave-reason").value);
 
   if (leaveId == "") {
-    request("api/index.php?action=apply_leave", data, function (result) {
+    request(ENDPOINT + "?action=apply_leave", data, function (result) {
       document.getElementById("message").innerHTML = result.message;
       if (result.success) resetLeaveForm();
       loadDoctorData();
     });
   } else {
     data.append("leave_id", leaveId);
-    request("api/index.php?action=update_leave", data, function (result) {
+    request(ENDPOINT + "?action=update_leave", data, function (result) {
       document.getElementById("message").innerHTML = result.message;
       if (result.success) resetLeaveForm();
       loadDoctorData();
