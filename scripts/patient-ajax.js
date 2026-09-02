@@ -1,12 +1,5 @@
 var ENDPOINT = "app/controllers/PatientController.php";
 
-function request(url, data, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.open(data ? "POST" : "GET", url, true);
-  xhr.onload = function () { callback(JSON.parse(xhr.responseText)); };
-  xhr.send(data);
-}
-
 function statusBadge(status) {
   return '<span class="status ' + status + '">' + status + "</span>";
 }
@@ -14,7 +7,10 @@ function statusBadge(status) {
 var patientAppointments = [];
 
 function loadPatientData() {
-  request(ENDPOINT + "?action=patient_data", null, function (result) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", ENDPOINT + "?action=patient_data", true);
+  xhr.onload = function () {
+    var result = JSON.parse(xhr.responseText);
     var doctors = document.getElementById("doctor-id");
     doctors.innerHTML = '<option value="">Choose doctor</option>';
     for (var i = 0; i < result.doctors.length; i++) {
@@ -36,7 +32,8 @@ function loadPatientData() {
       appointments.innerHTML += "<tr><td>" + item.doctor_name + "</td><td>" + item.appointment_date + "</td><td>" + item.appointment_time + "</td><td>" + item.notes + "</td><td>" + statusBadge(item.status) + "</td><td>" + action + "</td></tr>";
     }
     if (result.appointments.length == 0) appointments.innerHTML = '<tr><td colspan="6">No appointments yet.</td></tr>';
-  });
+  };
+  xhr.send();
 }
 
 function findAppointment(id) {
@@ -76,10 +73,15 @@ function deleteAppointment(id) {
   if (!confirm("Cancel this appointment?")) return;
   var data = new FormData();
   data.append("appointment_id", id);
-  request(ENDPOINT + "?action=delete_appointment", data, function (result) {
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", ENDPOINT + "?action=delete_appointment", true);
+  xhr.onload = function () {
+    var result = JSON.parse(xhr.responseText);
     document.getElementById("message").innerHTML = result.message;
     loadPatientData();
-  });
+  };
+  xhr.send(data);
 }
 
 document.getElementById("appointment-form").onsubmit = function (event) {
@@ -93,20 +95,20 @@ document.getElementById("appointment-form").onsubmit = function (event) {
   data.append("time", document.getElementById("appointment-time").value);
   data.append("notes", document.getElementById("appointment-notes").value);
 
+  var xhr = new XMLHttpRequest();
   if (appointmentId == "") {
-    request(ENDPOINT + "?action=book_appointment", data, function (result) {
-      document.getElementById("message").innerHTML = result.message;
-      if (result.success) resetAppointmentForm();
-      loadPatientData();
-    });
+    xhr.open("POST", ENDPOINT + "?action=book_appointment", true);
   } else {
     data.append("appointment_id", appointmentId);
-    request(ENDPOINT + "?action=update_appointment_patient", data, function (result) {
-      document.getElementById("message").innerHTML = result.message;
-      if (result.success) resetAppointmentForm();
-      loadPatientData();
-    });
+    xhr.open("POST", ENDPOINT + "?action=update_appointment_patient", true);
   }
+  xhr.onload = function () {
+    var result = JSON.parse(xhr.responseText);
+    document.getElementById("message").innerHTML = result.message;
+    if (result.success) resetAppointmentForm();
+    loadPatientData();
+  };
+  xhr.send(data);
 };
 
 loadPatientData();

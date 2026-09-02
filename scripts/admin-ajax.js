@@ -1,18 +1,14 @@
 var ENDPOINT = "app/controllers/AdminController.php";
 
-function request(url, data, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.open(data ? "POST" : "GET", url, true);
-  xhr.onload = function () { callback(JSON.parse(xhr.responseText)); };
-  xhr.send(data);
-}
-
 function statusBadge(status) {
   return '<span class="status ' + status + '">' + status + "</span>";
 }
 
 function loadAdminData() {
-  request(ENDPOINT + "?action=admin_data", null, function (result) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", ENDPOINT + "?action=admin_data", true);
+  xhr.onload = function () {
+    var result = JSON.parse(xhr.responseText);
     document.getElementById("user-count").innerHTML = result.users.length;
     document.getElementById("appointment-count").innerHTML = result.appointments;
     document.getElementById("leave-count").innerHTML = result.pending_leaves;
@@ -49,7 +45,8 @@ function loadAdminData() {
         '<button class="danger" onclick="deleteUser(' + user.id + ')">Delete</button>' +
         "</td></tr>";
     }
-  });
+  };
+  xhr.send();
 }
 
 document.getElementById("user-form").onsubmit = function (event) {
@@ -60,13 +57,18 @@ document.getElementById("user-form").onsubmit = function (event) {
   data.append("email", document.getElementById("new-user-email").value);
   data.append("password", document.getElementById("new-user-password").value);
   data.append("role", document.getElementById("new-user-role").value);
-  request(ENDPOINT + "?action=create_user", data, function (result) {
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", ENDPOINT + "?action=create_user", true);
+  xhr.onload = function () {
+    var result = JSON.parse(xhr.responseText);
     document.getElementById("message").innerHTML = result.message;
     if (result.success) {
       document.getElementById("user-form").reset();
       loadAdminData();
     }
-  });
+  };
+  xhr.send(data);
 };
 
 function updateUser(userId) {
@@ -76,20 +78,30 @@ function updateUser(userId) {
   data.append("name", document.getElementById("name-" + userId).value);
   data.append("email", document.getElementById("email-" + userId).value);
   data.append("role", document.getElementById("role-" + userId).value);
-  request(ENDPOINT + "?action=update_user", data, function (result) {
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", ENDPOINT + "?action=update_user", true);
+  xhr.onload = function () {
+    var result = JSON.parse(xhr.responseText);
     document.getElementById("message").innerHTML = result.message;
     loadAdminData();
-  });
+  };
+  xhr.send(data);
 }
 
 function deleteUser(userId) {
   if (!confirm("Delete this user?")) return;
   var data = new FormData();
   data.append("user_id", userId);
-  request(ENDPOINT + "?action=delete_user", data, function (result) {
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", ENDPOINT + "?action=delete_user", true);
+  xhr.onload = function () {
+    var result = JSON.parse(xhr.responseText);
     document.getElementById("message").innerHTML = result.message;
     loadAdminData();
-  });
+  };
+  xhr.send(data);
 }
 
 function reviewLeave(leaveId, status) {
@@ -98,10 +110,15 @@ function reviewLeave(leaveId, status) {
   var data = new FormData();
   data.append("leave_id", leaveId);
   data.append("status", status);
-  request(ENDPOINT + "?action=review_leave", data, function (result) {
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", ENDPOINT + "?action=review_leave", true);
+  xhr.onload = function () {
+    var result = JSON.parse(xhr.responseText);
     document.getElementById("message").innerHTML = result.message;
     loadAdminData();
-  });
+  };
+  xhr.send(data);
 }
 
 loadAdminData();
