@@ -70,7 +70,7 @@ button:hover {
   background-color: #12566c;
 }
 
-#registration-form {
+#register[hidden] {
   display: none;
 }
 
@@ -80,4 +80,23 @@ button:hover {
   margin-bottom: 0;
   text-align: center;
   font-size: 14px;
+}
+
+.success {
+  color: #17633a;
+}
+.error {
+  color: #9b2020;
+}
+@media (max-width: 850px) {
+  .puro-page {
+    width: calc(100% - 32px);
+    margin: 16px;
+  }
+  .chobi-ongsho {
+    display: none;
+  }
+  .form-ongsho {
+    width: 100%;
+  }
 }
