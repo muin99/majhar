@@ -9,3 +9,4 @@ for (var i = 0; i < tabLinks.length; i++) {
     document.getElementById(this.getAttribute("data-tab")).classList.add("active");
   };
 }
+ s s
